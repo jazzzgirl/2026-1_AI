@@ -187,6 +187,8 @@ tr:hover td{background:var(--surface2)}
 .sel-2{border-color:#f0a500!important;background:rgba(240,165,0,0.13)!important;color:#8a5c00!important}
 .sel-1{border-color:#d64040!important;background:rgba(214,64,64,0.10)!important;color:#a02020!important}
 .sel-0{border-color:#7aa8d4!important;background:rgba(80,188,223,0.15)!important;color:#1a56db!important}
+/* 5점 척도 선택 스타일 */
+.sel-score{border-color:#003087!important;background:rgba(0,48,135,0.13)!important;color:#003087!important;font-weight:900!important}
 
 .qwarn{font-size:11px;color:var(--red);margin-top:7px;display:none;padding:6px 10px;background:rgba(248,113,113,.08);border-radius:6px;border:1px solid rgba(248,113,113,.2)}
 .qwarn.show{display:block}
@@ -598,13 +600,14 @@ function getTitle(sec, teamIdx){
   const titles = TEAM_TITLES[sec] || TEAM_TITLES['test'];
   return titles ? (titles[teamIdx-1] || '') : '';
 }
-const LBL = {3:'상',2:'중',1:'하',0:'미제출'};
+const LBL = {5:'5점',4:'4점',3:'3점',2:'2점',1:'1점',0:'미제출'};
 
 let currentSec = null;
 let unlockedSections = {};
 let adminLogged = false;
 let adminTab = '35';
 let selectedScores = {};
+let myTeamNum = 0; // 본인 팀 번호 (0=미입력)
 let cachedData = null;
 
 function loading(on){ document.getElementById('overlay').classList.toggle('show',on); }
@@ -768,31 +771,63 @@ function buildStudentFormHTML(sec){
       <div class="fg"><label>학번</label><input id="f-sid" placeholder="예) 20231234" maxlength="12"/></div>
       <div class="fg"><label>이름</label><input id="f-name" placeholder="홍길동"/></div>
     </div>
-    <div class="sec-hd">
-      <div class="sec-ttl">팀별 점수</div>
-      <div class="badges">
-        <span class="badge bh" id="q3">상 0/5</span>
-        <span class="badge bm" id="q2">중 0/5</span>
-        <span class="badge bl" id="q1">하 0/3</span>
-        <span class="badge bn" id="q0">미제출 0</span>
+    <div class="form-row" style="grid-template-columns:1fr 2fr;margin-bottom:16px">
+      <div class="fg">
+        <label>본인 팀 번호</label>
+        <select id="f-team" style="width:100%;padding:10px 13px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:15px;color:var(--text);outline:none;font-family:inherit">
+          <option value="0">-- 선택 --</option>
+          ${Array.from({length:13},(_,i)=>`<option value="${i+1}">${i+1}팀</option>`).join('')}
+        </select>
+      </div>
+      <div class="fg" style="display:flex;align-items:flex-end">
+        <p style="font-size:12px;color:var(--muted);line-height:1.6;padding-bottom:2px">
+          본인 팀을 선택하면 해당 팀은 평가에서 제외됩니다.<br>나머지 12팀에 1~5점을 자유롭게 부여해주세요.
+        </p>
       </div>
     </div>
-    <p class="hint">상(3점) 최대 5팀 · 중(2점) 최대 5팀 · 하(1점) 최대 3팀 · 미제출(0점) — 13팀 모두 선택 필수</p>
+    <div class="sec-hd">
+      <div class="sec-ttl">팀별 점수 (1~5점)</div>
+      <div class="badges">
+        <span class="badge bh" id="q5">5점: 0팀</span>
+        <span class="badge bh" id="q4">4점: 0팀</span>
+        <span class="badge bm" id="q3">3점: 0팀</span>
+        <span class="badge bl" id="q2">2점: 0팀</span>
+        <span class="badge bl" id="q1">1점: 0팀</span>
+        <span class="badge bn" id="q0">미제출: 0팀</span>
+      </div>
+    </div>
+    <p class="hint">1점(낮음) ~ 5점(높음) · 미제출(0점) · 본인 팀 제외 12팀 모두 선택 필수</p>
     <table>
-      <thead><tr><th style="width:56px">팀</th><th>점수 선택</th></tr></thead>
+      <thead><tr><th style="width:60%">팀</th><th>점수 선택</th></tr></thead>
       <tbody id="score-tbody"></tbody>
     </table>
-    <div class="qwarn" id="qwarn">⚠ 배점 한도 초과 — 상 최대 5팀 · 중 최대 5팀 · 하 최대 3팀 이내로 조정하세요.</div>
+    <div class="qwarn" id="qwarn">⚠ 모든 팀에 점수를 선택해주세요.</div>
     <button class="btn-primary" onclick="submitStudent('${sec}')">평가 제출하기 →</button>
   </div>`;
 }
 
 function buildScoreRows(sec){
   selectedScores={};
+  myTeamNum = +( document.getElementById('f-team')?.value || 0 );
   const tb=document.getElementById('score-tbody');
   if(!tb)return;
   tb.innerHTML='';
   TEAMS.forEach(t=>{
+    if(t===myTeamNum){
+      // 본인 팀 — 제외 표시
+      selectedScores[t]='skip';
+      const tr=document.createElement('tr');
+      tr.style.opacity='0.38';
+      tr.innerHTML=`
+        <td>
+          <strong style="font-size:16px">${t}팀</strong>
+          <span style="font-size:11px;background:var(--surface2);color:var(--muted);border-radius:4px;padding:1px 7px;margin-left:6px">내 팀</span>
+          ${getTitle(sec,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(sec,t)}</div>`:''}
+        </td>
+        <td><span style="font-size:13px;color:var(--muted)">평가 제외</span></td>`;
+      tb.appendChild(tr);
+      return;
+    }
     selectedScores[t]=-1;
     const tr=document.createElement('tr');
     tr.innerHTML=`
@@ -801,13 +836,16 @@ function buildScoreRows(sec){
         ${getTitle(sec,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(sec,t)}</div>`:''}
       </td>
       <td><div class="sbts">
-        ${[3,2,1,0].map(v=>`<button class="sbt" data-team="${t}" data-val="${v}">${LBL[v]}</button>`).join('')}
+        ${[5,4,3,2,1,0].map(v=>`<button class="sbt" data-team="${t}" data-val="${v}">${LBL[v]}</button>`).join('')}
       </div></td>`;
     tb.appendChild(tr);
   });
   document.querySelectorAll('.sbt').forEach(b=>{
     b.addEventListener('click',()=>selectScore(+b.dataset.team,+b.dataset.val));
   });
+  // 팀 선택 변경 시 자동 재빌드
+  const teamSel = document.getElementById('f-team');
+  if(teamSel) teamSel.onchange = ()=>buildScoreRows(sec);
   updateQuota();
 }
 
@@ -815,20 +853,23 @@ function selectScore(team,val){
   selectedScores[team]=(selectedScores[team]===val)?-1:val;
   document.querySelectorAll(`.sbt[data-team="${team}"]`).forEach(b=>{
     b.className='sbt';
-    if(selectedScores[team]===+b.dataset.val) b.classList.add('sel-'+selectedScores[team]);
+    if(selectedScores[team]===+b.dataset.val) b.classList.add('sel-score');
   });
   updateQuota();
 }
 
 function updateQuota(){
-  const cnt={3:0,2:0,1:0,0:0};
-  Object.values(selectedScores).forEach(v=>{if(v>=0)cnt[v]++;});
-  document.getElementById('q3').textContent=`상 ${cnt[3]}/5`;
-  document.getElementById('q2').textContent=`중 ${cnt[2]}/5`;
-  document.getElementById('q1').textContent=`하 ${cnt[1]}/3`;
-  document.getElementById('q0').textContent=`미제출 ${cnt[0]}`;
-  const over=cnt[3]>5||cnt[2]>5||cnt[1]>3;
-  document.getElementById('qwarn').classList.toggle('show',over);
+  const cnt={5:0,4:0,3:0,2:0,1:0,0:0};
+  Object.values(selectedScores).forEach(v=>{if(v>=0&&v<=5)cnt[v]++;});
+  document.getElementById('q5').textContent=`5점: ${cnt[5]}팀`;
+  document.getElementById('q4').textContent=`4점: ${cnt[4]}팀`;
+  document.getElementById('q3').textContent=`3점: ${cnt[3]}팀`;
+  document.getElementById('q2').textContent=`2점: ${cnt[2]}팀`;
+  document.getElementById('q1').textContent=`1점: ${cnt[1]}팀`;
+  document.getElementById('q0').textContent=`미제출: ${cnt[0]}팀`;
+  // 본인팀 제외 후 미선택(-1) 팀 수
+  const unsel = Object.values(selectedScores).filter(v=>v===-1).length;
+  document.getElementById('qwarn').classList.toggle('show', unsel>0);
 }
 
 async function submitStudent(sec){
@@ -837,16 +878,18 @@ async function submitStudent(sec){
   const name=document.getElementById('f-name').value.trim();
   if(!dept||!sid||!name){popup('학과, 학번, 이름을\n모두 입력해주세요.', '📝');return;}
 
+  // 본인 팀 확인
+  const myTeam = +(document.getElementById('f-team')?.value||0);
+  if(myTeam===0){popup('본인 팀 번호를 선택해주세요.','⚠️');return;}
+
+  // 본인팀 제외 나머지 팀 미선택 확인
   const unselected=Object.values(selectedScores).filter(v=>v===-1).length;
-  if(unselected>0){popup(`아직 선택하지 않은 팀이 ${unselected}팀 있습니다.\n미제출 팀도 '미제출' 버튼을 눌러주세요.`, '⚠️');return;}
+  if(unselected>0){popup(`아직 점수를 선택하지 않은 팀이 ${unselected}팀 있습니다.`,'⚠️');return;}
 
-  const cnt={3:0,2:0,1:0,0:0};
-  Object.values(selectedScores).forEach(v=>{if(v>=0)cnt[v]++;});
-  if(cnt[3]>5||cnt[2]>5||cnt[1]>3){
-    popup(`배점 한도 초과\n상 최대 5팀 · 중 최대 5팀 · 하 최대 3팀\n현재 상:${cnt[3]} 중:${cnt[2]} 하:${cnt[1]}`, '⚠️');return;
-  }
-
-  const res=await api('POST',{action:'submit',sec,dept,sid,name,scores:selectedScores});
+  // 본인팀(skip) 제외하고 숫자 점수만 전송
+  const scoresClean = {};
+  Object.entries(selectedScores).forEach(([k,v])=>{ if(v!=='skip') scoresClean[k]=v; });
+  const res=await api('POST',{action:'submit',sec,dept,sid,name,scores:scoresClean,myTeam});
   if(res.ok){
     renderSubmitDone(document.getElementById('app'), sec);
   } else {
@@ -954,8 +997,8 @@ function renderAdminBody(){
   TEAMS.forEach(t=>tot[t]=0);
   d.students.forEach(s=>TEAMS.forEach(t=>{tot[t]+=(+s.scores[t]||0);}));
 
-  const spct=t=>n>0?((tot[t]/n)/3*30).toFixed(1):'0.0';
-  const apct=t=>(asc[t]!==undefined&&+asc[t]>0)?(+asc[t]/3*70).toFixed(1):null;
+  const spct=t=>n>0?((tot[t]/n)/5*30).toFixed(1):'0.0'; // 5점 척도 기준
+  const apct=t=>(asc[t]!==undefined&&+asc[t]>0)?(+asc[t]/5*70).toFixed(1):null;
   const comb=t=>{const s=spct(t),a=apct(t);return a?((+s+ +a)*0.15).toFixed(2):null;};
 
   const isTest=adminTab==='test';
@@ -970,7 +1013,7 @@ function renderAdminBody(){
 
   <div class="card">
     <div class="card-title"><div class="icon">🎓</div>교수자 점수 입력 — ${adminTab}</div>
-    <p class="hint">상(3) · 중(2) · 하(1) · 미제출(0) 선택 → 70% 자동 환산</p>
+    <p class="hint">1점(낮음) ~ 5점(높음) 선택 → 70% 자동 환산</p>
     <table>
       <thead><tr>
         <th style="width:52%">팀</th>
@@ -986,10 +1029,10 @@ function renderAdminBody(){
             </td>
             <td>
               <div class="sbts" style="margin-bottom:5px">
-                ${[3,2,1,0].map(sv=>`<button class="sbt asbt${v===sv?' sel-'+sv:''}" data-t="${t}" data-v="${sv}">${LBL[sv]}</button>`).join('')}
+                ${[5,4,3,2,1].map(sv=>`<button class="sbt asbt${v===sv?' sel-score':''}" data-t="${t}" data-v="${sv}">${LBL[sv]}</button>`).join('')}
               </div>
               <div style="font-size:13px;font-weight:700;color:var(--accent2);padding:2px 2px 0">
-                70% 환산: ${v>0?(v/3*70).toFixed(1)+'점':'—'}
+                70% 환산: ${v>=1?(v/5*70).toFixed(1)+'점':'—'}
               </div>
             </td>
           </tr>`;
@@ -1053,7 +1096,7 @@ function renderAdminBody(){
       const t=+btn.dataset.t,v=+btn.dataset.v;
       const cur=cachedData[adminTab]?.adminScores?.[t];
       const curVal=(cur===undefined||cur===null)?-1:+cur;
-      const newVal=(curVal===v)?-1:v;
+      const newVal=(curVal===v)?0:v; // 0=미선택
       const res=await api('POST',{action:'saveAdminScore',password:ADMIN_API_PW,sec:adminTab,teamIdx:t,score:newVal});
       if(res.ok){
         if(!cachedData[adminTab].adminScores) cachedData[adminTab].adminScores={};
@@ -1074,9 +1117,9 @@ function buildSheet(sec){
   const rows=[['팀','학생점수 합계','학생 평균','학생 30%','교수 점수','교수 70%','최종(×15%)']];
   TEAMS.forEach(t=>{
     const avg=n>0?+(tot[t]/n).toFixed(2):0;
-    const sp=n>0?+(avg/3*30).toFixed(1):0;
+    const sp=n>0?+(avg/5*30).toFixed(1):0; // 5점 척도
     const av=+(asc[t]||0);
-    const ap=av?+(av/3*70).toFixed(1):0;
+    const ap=av?+(av/5*70).toFixed(1):0;
     const cm=ap?+((sp+ap)*0.15).toFixed(2):0;  // 교수 점수만 있어도 계산
     rows.push([`${t}팀`,tot[t],avg,sp,av?`${LBL[av]}(${av})`:'-',ap||'-',cm||'-']);
   });
