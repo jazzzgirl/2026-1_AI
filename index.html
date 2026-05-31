@@ -569,7 +569,7 @@ const TEAM_TITLES = {
     '54 - 10팀 제목을 입력하세요',  // 10팀
     '54 - 11팀 제목을 입력하세요',  // 11팀
     '54 - 12팀 제목을 입력하세요',  // 12팀
-    '54 - 13팀 제목을 입력하세요',  // 13팀
+    '54 - 1팀 MagiCalendar (magicalendar.cloud)',  // 13팀
   ],
   '55': [
     '55 - 1팀 제목을 입력하세요',   // 1팀
@@ -832,7 +832,7 @@ function buildScoreRows(sec){
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td>
-        <strong style="font-size:16px">${t}팀</strong>
+        <strong style="font-size:16px">${t}번</strong>
         ${getTitle(sec,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(sec,t)}</div>`:''}
       </td>
       <td><div class="sbts">
