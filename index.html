@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#eef4fb">
+<title>AI디지털사고 상호평가</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #eef4fb;
+  --surface: #ffffff;
+  --surface2: #deeaf8;
+  --surface3: #c8daf2;
+  --border: rgba(0,48,135,0.12);
+  --border2: rgba(0,48,135,0.2);
+  --text: #001a5c;
+  --muted: #3a68b0;
+  --accent: #003087;
+  --accent2: #1a56db;
+  --accent-glow: rgba(0,48,135,0.2);
+  --sky: #50bcdf;
+  --green: #1a9e6e;
+  --yellow: #f0a500;
+  --red: #d64040;
+  --gray: #7aa8d4;
+  --r: 14px;
+  --r-sm: 8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+
+/* ── NAV ── */
+nav{
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 20px;
+  display:flex;align-items:center;gap:3px;
+  height:56px;position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 12px rgba(0,48,135,0.10);
+}
+/* 모바일 하단 탭바 safe area */
+@supports(padding-bottom: env(safe-area-inset-bottom)){
+  @media(max-width:600px){
+    nav{ padding-bottom:env(safe-area-inset-bottom); height:calc(60px + env(safe-area-inset-bottom)); }
+    .btn-primary{ bottom:calc(68px + env(safe-area-inset-bottom)); }
+    main{ padding-bottom:calc(80px + env(safe-area-inset-bottom)); }
+    .toast{ bottom:calc(72px + env(safe-area-inset-bottom)); }
+  }
+}
+.logo{
+  font-size:14px;font-weight:900;
+  background:linear-gradient(135deg,#003087,#50bcdf);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-right:14px;white-space:nowrap;letter-spacing:-.3px;
+}
+nav button{
+  padding:6px 14px;border:none;background:none;
+  font-size:14px;color:var(--muted);cursor:pointer;
+  border-radius:20px;font-weight:600;
+  transition:all .18s;font-family:inherit;
+}
+nav button:hover{background:var(--surface2);color:var(--text)}
+nav button.active{background:var(--accent);color:#fff;font-weight:700;box-shadow:0 2px 12px rgba(0,48,135,0.3)}
+nav .nav-test{color:#50bcdf;font-weight:700}
+nav .nav-test.active{background:linear-gradient(135deg,#50bcdf,#003087);color:#fff}
+
+/* ── HERO ── */
+.hero{
+  text-align:center;padding:40px 20px 28px;
+}
+.hero-chip{
+  display:inline-block;
+  background:rgba(0,48,135,0.08);
+  border:1px solid rgba(0,48,135,0.2);
+  border-radius:20px;
+  padding:5px 16px;
+  font-size:12px;font-weight:700;
+  color:var(--accent);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.hero h1{
+  font-size:clamp(20px,3.5vw,28px);
+  font-weight:900;
+  color:var(--text);
+  line-height:1.35;
+  letter-spacing:-.5px;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,#003087,#1a56db,#50bcdf);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+/* ── MAIN ── */
+main{max-width:760px;margin:0 auto;padding:0 16px 48px}
+
+/* ── CARD ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:24px;
+  margin-bottom:16px;
+  box-shadow:0 2px 12px rgba(0,48,135,0.07);
+}
+.card-title{
+  font-size:17px;font-weight:700;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+  color:var(--text);
+}
+.card-title .icon{
+  width:30px;height:30px;border-radius:8px;
+  background:rgba(0,48,135,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+}
+
+/* ── FORM ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.fg label{
+  display:block;font-size:12px;font-weight:700;
+  color:var(--muted);margin-bottom:5px;
+  text-transform:uppercase;letter-spacing:.08em;
+}
+.fg input{
+  width:100%;padding:10px 13px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:var(--r-sm);
+  font-size:15px;color:var(--text);
+  outline:none;transition:all .15s;
+  font-family:inherit;
+}
+.fg input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.fg input::placeholder{color:var(--gray)}
+
+/* ── SCORE SECTION ── */
+.sec-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.sec-ttl{font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.badges{display:flex;gap:5px;flex-wrap:wrap}
+.badge{font-size:13px;padding:4px 12px;border-radius:20px;font-weight:700}
+.bh{background:rgba(0,48,135,.1);color:#003087;border:1px solid rgba(0,48,135,.25)}
+.bm{background:rgba(240,165,0,.12);color:#8a5c00;border:1px solid rgba(240,165,0,.28)}
+.bl{background:rgba(214,64,64,.10);color:#a02020;border:1px solid rgba(214,64,64,.25)}
+.bn{background:rgba(80,188,223,.12);color:#1a56db;border:1px solid rgba(80,188,223,.28)}
+
+/* ── TABLE ── */
+.hint{font-size:14px;color:var(--muted);margin-bottom:12px;line-height:1.7}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{
+  font-size:13px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.04em;
+  padding:10px 14px;text-align:left;
+  border-bottom:1px solid var(--border);
+  background:var(--surface2);
+}
+th:first-child{width:60%}
+th:last-child{width:40%}
+td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  font-size:15px;color:var(--text);
+  vertical-align:middle;
+  word-break:keep-all;
+}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2)}
+
+/* ── SCORE BUTTONS ── */
+.sbts{display:flex;gap:5px}
+.sbt{
+  padding:6px 14px;height:38px;
+  border:1.5px solid var(--border2);
+  border-radius:8px;background:none;cursor:pointer;
+  font-size:15px;font-weight:700;color:var(--muted);
+  transition:all .12s;font-family:inherit;white-space:nowrap;
+}
+.sbt:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,48,135,0.06)}
+.sel-3{border-color:#003087!important;background:rgba(0,48,135,0.12)!important;color:#003087!important}
+.sel-2{border-color:#f0a500!important;background:rgba(240,165,0,0.13)!important;color:#8a5c00!important}
+.sel-1{border-color:#d64040!important;background:rgba(214,64,64,0.10)!important;color:#a02020!important}
+.sel-0{border-color:#7aa8d4!important;background:rgba(80,188,223,0.15)!important;color:#1a56db!important}
+
+.qwarn{font-size:11px;color:var(--red);margin-top:7px;display:none;padding:6px 10px;background:rgba(248,113,113,.08);border-radius:6px;border:1px solid rgba(248,113,113,.2)}
+.qwarn.show{display:block}
+
+/* ── PRIMARY BTN ── */
+.btn-primary{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,#003087,#1a56db);
+  color:#fff;
+  border:none;border-radius:var(--r-sm);
+  font-size:15px;font-weight:700;cursor:pointer;
+  margin-top:10px;transition:all .15s;
+  font-family:inherit;
+  box-shadow:0 4px 16px rgba(0,48,135,0.28);
+  letter-spacing:.02em;
+}
+.btn-primary:hover{background:linear-gradient(135deg,#002570,#1346b8);box-shadow:0 6px 22px rgba(0,48,135,0.36);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--surface3);color:var(--muted);cursor:not-allowed;box-shadow:none;transform:none}
+.btn-sm{
+  padding:7px 14px;
+  border:1px solid var(--border2);
+  background:var(--surface2);color:var(--text);
+  border-radius:var(--r-sm);font-size:12px;font-weight:600;
+  cursor:pointer;display:inline-flex;align-items:center;gap:5px;
+  transition:all .15s;font-family:inherit;
+}
+.btn-sm:hover{background:var(--surface3);border-color:var(--border2)}
+
+/* ── LOGIN ── */
+.login-wrap{max-width:360px;margin:40px auto 0}
+.login-chip{
+  display:inline-block;
+  background:rgba(0,48,135,0.08);border:1px solid rgba(0,48,135,0.2);
+  border-radius:20px;padding:5px 16px;
+  font-size:12px;font-weight:700;color:var(--accent2);
+  letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:16px;
+}
+.pw-row{display:flex;gap:8px;margin-top:6px}
+.pw-row input{
+  flex:1;padding:10px 13px;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--r-sm);font-size:15px;color:var(--text);
+  outline:none;font-family:inherit;
+}
+.pw-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.pw-row input::placeholder{color:var(--gray)}
+.pw-row button{
+  padding:9px 16px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:var(--r-sm);
+  cursor:pointer;font-size:13px;font-weight:700;
+  font-family:inherit;transition:background .15s;
+}
+.pw-row button:hover{background:#6b5ae8}
+
+/* ── ADMIN TABS ── */
+.tab-bar{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab-btn{
+  padding:6px 14px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:20px;font-size:12px;cursor:pointer;
+  font-weight:600;color:var(--muted);font-family:inherit;
+  transition:all .15s;
+}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 10px rgba(0,48,135,0.25)}
+
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-card{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:14px;text-align:center;
+}
+.stat-lbl{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.stat-val{font-size:24px;font-weight:900;color:var(--accent2)}
+
+.result-table th,.result-table td{text-align:center}
+.result-table th:first-child,.result-table td:first-child{text-align:left}
+
+/* ── OVERLAY ── */
+.overlay{position:fixed;inset:0;background:rgba(238,244,251,0.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:500}
+.overlay.show{display:flex}
+.spin-ring{
+  width:40px;height:40px;
+  border:3px solid var(--surface3);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin .65s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:22px;right:22px;
+  background:#001a5c;
+  border:1px solid rgba(80,188,223,0.3);
+  color:#ddeeff;
+  padding:11px 18px;border-radius:var(--r-sm);
+  font-size:14px;font-weight:600;
+  opacity:0;transform:translateY(10px);
+  transition:all .22s;z-index:999;pointer-events:none;
+  max-width:300px;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ── 팝업 모달 ── */
+.popup-bg{
+  position:fixed;inset:0;
+  background:rgba(0,26,92,0.45);
+  backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;
+  z-index:900;opacity:0;pointer-events:none;
+  transition:opacity .2s;
+}
+.popup-bg.show{opacity:1;pointer-events:auto;}
+.popup-box{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:28px 28px 22px;
+  max-width:320px;width:90%;
+  text-align:center;
+  transform:scale(.94);
+  transition:transform .2s;
+  box-shadow:0 8px 32px rgba(0,48,135,0.18);
+}
+.popup-bg.show .popup-box{transform:scale(1);}
+.popup-icon{font-size:36px;margin-bottom:12px;}
+.popup-msg{
+  font-size:15px;font-weight:600;color:var(--text);
+  line-height:1.6;white-space:pre-line;margin-bottom:20px;
+}
+.popup-ok{
+  width:100%;padding:11px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:var(--r-sm);
+  font-size:15px;font-weight:700;cursor:pointer;
+  font-family:inherit;transition:background .15s;
+}
+.popup-ok:hover{background:#002570;}
+
+.empty{text-align:center;padding:36px 0;color:var(--muted);font-size:13px}
+
+/* ── TEST BANNER ── */
+.test-banner{
+  background:rgba(240,165,0,.08);
+  border:1px solid rgba(240,165,0,.28);
+  border-radius:var(--r-sm);
+  padding:11px 16px;
+  font-size:13px;color:#8a5c00;
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+  font-weight:600;
+}
+
+/* ════════════════════════════════
+   MOBILE RESPONSIVE (≤600px)
+════════════════════════════════ */
+@media(max-width:600px){
+
+  /* NAV → 하단 탭바로 전환 */
+  nav{
+    position:fixed;bottom:0;top:auto;
+    left:0;right:0;
+    height:60px;
+    padding:0 4px;
+    justify-content:space-around;
+    box-shadow:0 -2px 12px rgba(0,48,135,0.10);
+    border-top:1px solid var(--border);
+    border-bottom:none;
+    z-index:300;
+  }
+  .logo{ display:none }
+  nav button{
+    flex:1;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    gap:3px;
+    padding:6px 2px;
+    border-radius:10px;
+    font-size:10px;font-weight:700;
+    line-height:1.2;
+  }
+  nav button::before{
+    font-size:18px;line-height:1;
+  }
+  #nav-s35::before{ content:'📋' }
+  #nav-s54::before{ content:'📋' }
+  #nav-s55::before{ content:'📋' }
+  #nav-test::before{ content:'⚡' }
+  #nav-admin::before{ content:'🔒' }
+
+  /* HERO */
+  .hero{ padding:24px 16px 18px }
+  .hero h1{ font-size:18px }
+  .hero-chip{ font-size:11px;padding:4px 12px }
+
+  /* MAIN — 하단 탭바 높이만큼 여백 */
+  main{ padding:0 12px 80px }
+
+  /* CARD */
+  .card{ padding:16px;border-radius:12px }
+  .card-title{ font-size:15px;margin-bottom:14px }
+
+  /* 학과·학번·이름 → 세로 */
+  .form-row{ grid-template-columns:1fr;gap:10px }
+  .fg label{ font-size:11px }
+  .fg input{ font-size:16px;padding:12px 13px } /* iOS 줌 방지: 16px */
+
+  /* 배점 뱃지 → 2열 */
+  .sec-hd{ flex-direction:column;align-items:flex-start }
+  .badges{ gap:4px }
+  .badge{ font-size:11px;padding:4px 10px }
+
+  /* HINT */
+  .hint{ font-size:12px }
+
+  /* 점수 테이블 */
+  th{ font-size:10px;padding:7px 8px }
+  td{ padding:9px 8px;font-size:13px }
+
+  /* 모바일: 팀 컬럼 40%, 점수 컬럼 60% */
+  th:first-child{ width:60% }
+  th:last-child{ width:40% }
+
+  /* 점수 버튼 — 모바일에서 넓게 */
+  .sbts{ gap:4px }
+  .sbt{
+    flex:1;
+    padding:0;
+    height:36px;
+    font-size:13px;
+    border-radius:8px;
+    min-width:0;
+  }
+
+  /* 제출 버튼 */
+  .btn-primary{
+    font-size:16px;
+    padding:15px;
+    border-radius:12px;
+    position:sticky;bottom:68px;
+    box-shadow:0 4px 20px rgba(0,48,135,0.35);
+  }
+
+  /* btn-sm 작게 */
+  .btn-sm{ font-size:11px;padding:6px 10px }
+
+  /* LOGIN */
+  .login-wrap{ margin:20px auto 0;max-width:100% }
+  .pw-row input{ font-size:16px } /* iOS 줌 방지 */
+  .pw-row button{ font-size:14px;padding:10px 18px }
+
+  /* 통계 카드 2열 */
+  .stats-row{ grid-template-columns:1fr 1fr;gap:8px }
+  .stat-val{ font-size:20px }
+
+  /* 결과 테이블 */
+  .result-table th,.result-table td{ font-size:11px;padding:7px 5px }
+
+  /* 관리자 탭 */
+  .tab-bar{ gap:5px }
+  .tab-btn{ font-size:12px;padding:7px 12px }
+
+  /* TOAST 위치 */
+  .toast{
+    bottom:70px;
+    left:12px;right:12px;
+    max-width:100%;
+    text-align:center;
+    font-size:13px;
+  }
+  .popup-box{ padding:22px 18px 18px;max-width:92%; }
+  .popup-msg{ font-size:14px; }
+
+  /* 경고 텍스트 */
+  .qwarn{ font-size:12px }
+
+  /* 관리자 패널 상단 버튼 */
+  .admin-top-row{
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    gap:10px !important;
+  }
+  .admin-btn-group{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    width:100%;
+    gap:6px;
+  }
+}
+
+/* 태블릿 (601~900px) */
+@media(min-width:601px) and (max-width:900px){
+  .form-row{ grid-template-columns:1fr 1fr }
+  .stats-row{ grid-template-columns:repeat(3,1fr) }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">✦ 상호평가</div>
+  <button onclick="tryNav('s35')" id="nav-s35">035분반</button>
+  <button onclick="tryNav('s54')" id="nav-s54">054분반</button>
+  <button onclick="tryNav('s55')" id="nav-s55">055분반</button>
+  <button onclick="tryNav('test')" id="nav-test" class="nav-test">TEST</button>
+  <button onclick="tryNav('admin')" id="nav-admin">관리자</button>
+</nav>
+
+<div class="hero">
+  <div class="hero-chip">2026 · 1학기</div>
+  <h1>인공지능과 디지털사고<br><span>팀 별 프로젝트 상호평가</span></h1>
+</div>
+
+<main id="app"></main>
+
+<div class="overlay" id="overlay"><div class="spin-ring"></div></div>
+<div class="toast" id="toast"></div>
+
+<div class="popup-bg" id="popup-bg" onclick="closePopup(event)">
+  <div class="popup-box">
+    <div class="popup-icon" id="popup-icon">💬</div>
+    <div class="popup-msg" id="popup-msg"></div>
+    <button class="popup-ok" onclick="closePopup()">확인</button>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPCp1BzMHQajZZ12026C_o7mWuw6Or9gS0DJRfc7wQEO0Mn4cHGVC0X-WdlbXvRVal/exec';
+
+const SECTION_PWS = {
+  '35': '0350609',
+  '54': '0540604',
+  '55': '0604055',
+  'test': 'test1234',
+  'admin': 'admin0921'
+};
+// Apps Script 관리자 API 비밀번호 (Code.gs의 ADMIN_PASSWORD와 동일하게 유지)
+const ADMIN_API_PW = 'admin0921';
+const ALL_SECTIONS = ['35','54','55','test'];
+const RESULT_SECTIONS = ['35','54','55'];
+const TEAMS = Array.from({length:13},(_,i)=>i+1);
+
+// ════════════════════════════════════════════════════════
+// ★ 분반별 팀 프로젝트 제목 — 따옴표 안의 내용만 수정하세요 ★
+// 제목이 없으면 빈 문자열('')로 두세요.
+// ════════════════════════════════════════════════════════
+
+const TEAM_TITLES = {
+  '35': [
+    '35 - 1팀 제목을 입력하세요',   // 1팀
+    '35 - 2팀 제목을 입력하세요',   // 2팀
+    '35 - 3팀 제목을 입력하세요',   // 3팀
+    '35 - 4팀 제목을 입력하세요',   // 4팀
+    '35 - 5팀 제목을 입력하세요',   // 5팀
+    '35 - 6팀 제목을 입력하세요',   // 6팀
+    '35 - 7팀 제목을 입력하세요',   // 7팀
+    '35 - 8팀 제목을 입력하세요',   // 8팀
+    '35 - 9팀 제목을 입력하세요',   // 9팀
+    '35 - 10팀 제목을 입력하세요',  // 10팀
+    '35 - 11팀 제목을 입력하세요',  // 11팀
+    '35 - 12팀 제목을 입력하세요',  // 12팀
+    '35 - 13팀 제목을 입력하세요',  // 13팀
+  ],
+  '54': [
+    '54 - 1팀 제목을 입력하세요',   // 1팀
+    '54 - 2팀 제목을 입력하세요',   // 2팀
+    '54 - 3팀 제목을 입력하세요',   // 3팀
+    '54 - 4팀 제목을 입력하세요',   // 4팀
+    '54 - 5팀 제목을 입력하세요',   // 5팀
+    '54 - 6팀 제목을 입력하세요',   // 6팀
+    '54 - 7팀 제목을 입력하세요',   // 7팀
+    '54 - 8팀 제목을 입력하세요',   // 8팀
+    '54 - 9팀 제목을 입력하세요',   // 9팀
+    '54 - 10팀 제목을 입력하세요',  // 10팀
+    '54 - 11팀 제목을 입력하세요',  // 11팀
+    '54 - 12팀 제목을 입력하세요',  // 12팀
+    '54 - 13팀 제목을 입력하세요',  // 13팀
+  ],
+  '55': [
+    '55 - 1팀 제목을 입력하세요',   // 1팀
+    '55 - 2팀 제목을 입력하세요',   // 2팀
+    '55 - 3팀 제목을 입력하세요',   // 3팀
+    '55 - 4팀 제목을 입력하세요',   // 4팀
+    '55 - 5팀 제목을 입력하세요',   // 5팀
+    '55 - 6팀 제목을 입력하세요',   // 6팀
+    '55 - 7팀 제목을 입력하세요',   // 7팀
+    '55 - 8팀 제목을 입력하세요',   // 8팀
+    '55 - 9팀 제목을 입력하세요',   // 9팀
+    '55 - 10팀 제목을 입력하세요',  // 10팀
+    '55 - 11팀 제목을 입력하세요',  // 11팀
+    '55 - 12팀 제목을 입력하세요',  // 12팀
+    '55 - 13팀 제목을 입력하세요',  // 13팀
+  ],
+  'test': [
+    'TEST - 1팀 제목', 'TEST - 2팀 제목', 'TEST - 3팀 제목',
+    'TEST - 4팀 제목', 'TEST - 5팀 제목', 'TEST - 6팀 제목',
+    'TEST - 7팀 제목', 'TEST - 8팀 제목', 'TEST - 9팀 제목',
+    'TEST - 10팀 제목','TEST - 11팀 제목','TEST - 12팀 제목',
+    'TEST - 13팀 제목',
+  ],
+};
+
+// 현재 분반의 팀 제목 배열을 가져오는 헬퍼
+function getTitle(sec, teamIdx){
+  const titles = TEAM_TITLES[sec] || TEAM_TITLES['test'];
+  return titles ? (titles[teamIdx-1] || '') : '';
+}
+const LBL = {3:'상',2:'중',1:'하',0:'미제출'};
+
+let currentSec = null;
+let unlockedSections = {};
+let adminLogged = false;
+let adminTab = '35';
+let selectedScores = {};
+let cachedData = null;
+
+function loading(on){ document.getElementById('overlay').classList.toggle('show',on); }
+let _tt;
+function toast(msg,dur=3200){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),dur);
+}
+
+// 팝업 모달
+function popup(msg, icon='💬'){
+  document.getElementById('popup-icon').textContent = icon;
+  document.getElementById('popup-msg').textContent  = msg;
+  document.getElementById('popup-bg').classList.add('show');
+}
+function closePopup(e){
+  // 배경 클릭 또는 확인 버튼 클릭 시 닫기
+  if(!e || e.target===document.getElementById('popup-bg')){
+    document.getElementById('popup-bg').classList.remove('show');
+  }
+}
+
+// 알림용 통합 함수 (에러/경고는 팝업, 성공은 토스트)
+function alert(msg){ popup(msg, '⚠️'); }
+async function api(method,body){
+  loading(true);
+  try{
+    if(method==='GET'){
+      const qs=Object.entries(body).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+      const r=await fetch(`${SCRIPT_URL}?${qs}`);
+      return await r.json();
+    }else{
+      const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(body)});
+      return await r.json();
+    }
+  }catch(e){return {ok:false,msg:'서버 연결 실패: '+e.message};}
+  finally{loading(false);}
+}
+
+// ── 제출 완료 화면 ───────────────────────────────────────────────
+function renderSubmitDone(el, sec){
+  // 네비 버튼 비활성화 (해당 분반만)
+  const navKey = 's' + sec;
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+
+  el.innerHTML=`
+  <div style="max-width:420px;margin:40px auto 0;text-align:center">
+    <div style="font-size:60px;margin-bottom:16px">✅</div>
+    <div style="font-size:22px;font-weight:900;color:var(--text);margin-bottom:10px">
+      평가 제출 완료!
+    </div>
+    <div style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:28px">
+      소중한 평가에 참여해 주셔서 감사합니다.<br>
+      제출된 평가는 수정할 수 없습니다.
+    </div>
+    <button class="btn-primary" style="max-width:240px;margin:0 auto"
+      onclick="goHome()">메인 화면으로 →</button>
+  </div>`;
+}
+
+function goHome(){
+  // 분반 잠금 상태 초기화 (재입장 방지)
+  unlockedSections = {};
+  // 네비 초기화
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  // 히어로만 보이고 app 비우기
+  document.getElementById('app').innerHTML = '';
+}
+
+// ── NAV ──────────────────────────────────────────────────────────
+function tryNav(key){
+  if(key==='admin'){
+    currentSec=null;
+    setActiveNav('admin');
+    renderAdmin(document.getElementById('app'));
+    return;
+  }
+  // 's35' → '35', 'test' → 'test'
+  const sec = key.startsWith('s') ? key.slice(1) : key;
+  // already unlocked?
+  if(unlockedSections[sec]){
+    currentSec=sec;
+    setActiveNav(key);
+    renderStudentForm(document.getElementById('app'),sec);
+  } else {
+    currentSec=null;
+    setActiveNav(key);
+    renderSectionLogin(document.getElementById('app'),sec,key);
+  }
+}
+function setActiveNav(key){
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-'+key).classList.add('active');
+}
+
+// ── SECTION LOGIN ────────────────────────────────────────────────
+function renderSectionLogin(el, sec, navKey){
+  const isTest = sec==='test';
+  el.innerHTML=`
+  <div class="login-wrap">
+    <div style="text-align:center;margin-bottom:20px">
+      <div class="login-chip">${isTest?'TEST':'🔐 '+(sec)+'분반'}</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text)">${isTest?'테스트 모드':''+sec+'분반 입장'}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">${isTest?'평가 시스템 테스트용입니다':'담당 교수님께 받은 분반 비밀번호를 입력하세요'}</div>
+    </div>
+    <div class="card">
+      <div class="fg">
+        <label>비밀번호</label>
+        <div class="pw-row">
+          <input type="password" id="sec-pw" placeholder="비밀번호 입력"
+            onkeydown="if(event.key==='Enter')checkSectionPw('${sec}','${navKey}')"/>
+          <button onclick="checkSectionPw('${sec}','${navKey}')">입장</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  setTimeout(()=>document.getElementById('sec-pw')?.focus(),100);
+}
+
+function checkSectionPw(sec, navKey){
+  const pw=document.getElementById('sec-pw').value;
+  if(pw===SECTION_PWS[sec]){
+    unlockedSections[sec]=true;
+    currentSec=sec;
+    if(sec==='test'){
+      renderTestPage(document.getElementById('app'));
+    } else {
+      renderStudentForm(document.getElementById('app'),sec);
+    }
+  } else {
+    popup('비밀번호가 올바르지 않습니다.', '🔒');
+    document.getElementById('sec-pw').value='';
+    document.getElementById('sec-pw').focus();
+  }
+}
+
+// ── TEST PAGE ────────────────────────────────────────────────────
+function renderTestPage(el){
+  el.innerHTML=`
+  <div class="test-banner">⚡ TEST 모드 — 실제 Google Sheets에 저장됩니다. 테스트 후 관리자에서 데이터를 확인하세요.</div>
+  ${buildStudentFormHTML('test')}`;
+  buildScoreRows('test');
+}
+
+// ── STUDENT FORM ─────────────────────────────────────────────────
+function renderStudentForm(el, sec){
+  el.innerHTML=buildStudentFormHTML(sec);
+  buildScoreRows(sec);
+}
+
+function buildStudentFormHTML(sec){
+  return `
+  <div class="card">
+    <div class="card-title">
+      <div class="icon">✏️</div>
+      ${sec==='test'?'TEST':''+sec+'분반'} 상호평가 입력
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>학과</label><input id="f-dept" placeholder="예) 컴퓨터공학과"/></div>
+      <div class="fg"><label>학번</label><input id="f-sid" placeholder="예) 20231234" maxlength="12"/></div>
+      <div class="fg"><label>이름</label><input id="f-name" placeholder="홍길동"/></div>
+    </div>
+    <div class="sec-hd">
+      <div class="sec-ttl">팀별 점수</div>
+      <div class="badges">
+        <span class="badge bh" id="q3">상 0/5</span>
+        <span class="badge bm" id="q2">중 0/5</span>
+        <span class="badge bl" id="q1">하 0/3</span>
+        <span class="badge bn" id="q0">미제출 0</span>
+      </div>
+    </div>
+    <p class="hint">상(3점) 최대 5팀 · 중(2점) 최대 5팀 · 하(1점) 최대 3팀 · 미제출(0점) — 13팀 모두 선택 필수</p>
+    <table>
+      <thead><tr><th style="width:56px">팀</th><th>점수 선택</th></tr></thead>
+      <tbody id="score-tbody"></tbody>
+    </table>
+    <div class="qwarn" id="qwarn">⚠ 배점 한도 초과 — 상 최대 5팀 · 중 최대 5팀 · 하 최대 3팀 이내로 조정하세요.</div>
+    <button class="btn-primary" onclick="submitStudent('${sec}')">평가 제출하기 →</button>
+  </div>`;
+}
+
+function buildScoreRows(sec){
+  selectedScores={};
+  const tb=document.getElementById('score-tbody');
+  if(!tb)return;
+  tb.innerHTML='';
+  TEAMS.forEach(t=>{
+    selectedScores[t]=-1;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>
+        <strong style="font-size:16px">${t}팀</strong>
+        ${getTitle(sec,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(sec,t)}</div>`:''}
+      </td>
+      <td><div class="sbts">
+        ${[3,2,1,0].map(v=>`<button class="sbt" data-team="${t}" data-val="${v}">${LBL[v]}</button>`).join('')}
+      </div></td>`;
+    tb.appendChild(tr);
+  });
+  document.querySelectorAll('.sbt').forEach(b=>{
+    b.addEventListener('click',()=>selectScore(+b.dataset.team,+b.dataset.val));
+  });
+  updateQuota();
+}
+
+function selectScore(team,val){
+  selectedScores[team]=(selectedScores[team]===val)?-1:val;
+  document.querySelectorAll(`.sbt[data-team="${team}"]`).forEach(b=>{
+    b.className='sbt';
+    if(selectedScores[team]===+b.dataset.val) b.classList.add('sel-'+selectedScores[team]);
+  });
+  updateQuota();
+}
+
+function updateQuota(){
+  const cnt={3:0,2:0,1:0,0:0};
+  Object.values(selectedScores).forEach(v=>{if(v>=0)cnt[v]++;});
+  document.getElementById('q3').textContent=`상 ${cnt[3]}/5`;
+  document.getElementById('q2').textContent=`중 ${cnt[2]}/5`;
+  document.getElementById('q1').textContent=`하 ${cnt[1]}/3`;
+  document.getElementById('q0').textContent=`미제출 ${cnt[0]}`;
+  const over=cnt[3]>5||cnt[2]>5||cnt[1]>3;
+  document.getElementById('qwarn').classList.toggle('show',over);
+}
+
+async function submitStudent(sec){
+  const dept=document.getElementById('f-dept').value.trim();
+  const sid=document.getElementById('f-sid').value.trim();
+  const name=document.getElementById('f-name').value.trim();
+  if(!dept||!sid||!name){popup('학과, 학번, 이름을\n모두 입력해주세요.', '📝');return;}
+
+  const unselected=Object.values(selectedScores).filter(v=>v===-1).length;
+  if(unselected>0){popup(`아직 선택하지 않은 팀이 ${unselected}팀 있습니다.\n미제출 팀도 '미제출' 버튼을 눌러주세요.`, '⚠️');return;}
+
+  const cnt={3:0,2:0,1:0,0:0};
+  Object.values(selectedScores).forEach(v=>{if(v>=0)cnt[v]++;});
+  if(cnt[3]>5||cnt[2]>5||cnt[1]>3){
+    popup(`배점 한도 초과\n상 최대 5팀 · 중 최대 5팀 · 하 최대 3팀\n현재 상:${cnt[3]} 중:${cnt[2]} 하:${cnt[1]}`, '⚠️');return;
+  }
+
+  const res=await api('POST',{action:'submit',sec,dept,sid,name,scores:selectedScores});
+  if(res.ok){
+    renderSubmitDone(document.getElementById('app'), sec);
+  } else {
+    popup('제출에 실패했습니다.\n' + (res.msg||'잠시 후 다시 시도해주세요.'), '❌');
+  }
+}
+
+// ── ADMIN ────────────────────────────────────────────────────────
+function renderAdmin(el){
+  if(!adminLogged){
+    el.innerHTML=`
+    <div class="login-wrap">
+      <div style="text-align:center;margin-bottom:20px">
+        <div class="login-chip">🔐 관리자</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text)">관리자 로그인</div>
+      </div>
+      <div class="card">
+        <div class="fg">
+          <label>관리자 비밀번호</label>
+          <div class="pw-row">
+            <input type="password" id="adpw" placeholder="비밀번호 입력"
+              onkeydown="if(event.key==='Enter')adminLogin()"/>
+            <button onclick="adminLogin()">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    setTimeout(()=>document.getElementById('adpw')?.focus(),100);
+  } else {
+    renderAdminPanel(el);
+  }
+}
+
+async function adminLogin(){
+  const pw=document.getElementById('adpw').value;
+  if(pw===SECTION_PWS['admin']){
+    adminLogged=true;
+    localStorage.setItem('_apw',pw);
+    await fetchData();
+    renderAdminPanel(document.getElementById('app'));
+  } else {
+    popup('비밀번호가 올바르지 않습니다.', '🔒');
+    document.getElementById('adpw').value='';
+  }
+}
+
+async function fetchData(){
+  const res=await api('GET',{action:'getData'});
+  if(res.ok) cachedData=res.data;
+  else popup('데이터 로드 실패\n'+(res.msg||''), '❌');
+}
+
+function renderAdminPanel(el){
+  el.innerHTML=`
+  <div>
+    <div class="card" style="padding:14px 20px;margin-bottom:14px">
+      <div class="admin-top-row" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div style="font-size:15px;font-weight:700">관리자 패널</div>
+        <div class="admin-btn-group" style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn-sm" onclick="refreshData()">↺ 새로고침</button>
+          <button class="btn-sm" onclick="downloadAll()">↓ 전체 엑셀</button>
+          <button class="btn-sm" onclick="downloadSection(adminTab)">↓ 현재 분반</button>
+        </div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      ${RESULT_SECTIONS.map(s=>`<button class="tab-btn${s===adminTab?' active':''}" onclick="switchTab('${s}')">${s}분반</button>`).join('')}
+      <button class="tab-btn${adminTab==='test'?' active':''}" onclick="switchTab('test')" style="${adminTab==='test'?'':'color:#fbbf24;border-color:rgba(251,191,36,.3)'}">TEST</button>
+    </div>
+    <div id="admin-body"></div>
+  </div>`;
+  renderAdminBody();
+}
+
+async function refreshData(){
+  await fetchData();
+  renderAdminBody();
+  toast('🔄 데이터가 업데이트됐습니다.');
+}
+
+function switchTab(s){
+  adminTab=s;
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    const labels=[...RESULT_SECTIONS,'test'];
+    const idx=labels.indexOf(adminTab);
+    b.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    const labels=[...RESULT_SECTIONS,'test'];
+    b.classList.toggle('active',labels[i]===s);
+  });
+  renderAdminBody();
+}
+
+function renderAdminBody(){
+  const el=document.getElementById('admin-body');
+  if(!el)return;
+  if(!cachedData){el.innerHTML='<div class="empty">데이터를 불러오는 중...</div>';return;}
+
+  const d=cachedData[adminTab]||{students:[],adminScores:{}};
+  const n=d.students.length;
+  const asc=d.adminScores||{};
+
+  const tot={};
+  TEAMS.forEach(t=>tot[t]=0);
+  d.students.forEach(s=>TEAMS.forEach(t=>{tot[t]+=(+s.scores[t]||0);}));
+
+  const spct=t=>n>0?((tot[t]/n)/3*30).toFixed(1):'0.0';
+  const apct=t=>(asc[t]!==undefined&&+asc[t]>0)?(+asc[t]/3*70).toFixed(1):null;
+  const comb=t=>{const s=spct(t),a=apct(t);return a?((+s+ +a)*0.15).toFixed(2):null;};
+
+  const isTest=adminTab==='test';
+
+  el.innerHTML=`
+  ${isTest?'<div class="test-banner">⚡ TEST 분반 데이터</div>':''}
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-lbl">제출 인원</div><div class="stat-val">${n}명</div></div>
+    <div class="stat-card"><div class="stat-lbl">평가 팀 수</div><div class="stat-val">13팀</div></div>
+    <div class="stat-card"><div class="stat-lbl">분반</div><div class="stat-val">${adminTab}</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon">🎓</div>교수자 점수 입력 — ${adminTab}</div>
+    <p class="hint">상(3) · 중(2) · 하(1) · 미제출(0) 선택 → 70% 자동 환산</p>
+    <table>
+      <thead><tr>
+        <th style="width:52%">팀</th>
+        <th style="width:48%">점수 선택 / 70% 환산</th>
+      </tr></thead>
+      <tbody>
+        ${TEAMS.map(t=>{
+          const v=asc[t]!==undefined?+asc[t]:-1;
+          return `<tr>
+            <td>
+              <strong>${t}팀</strong>
+              ${getTitle(adminTab,t)?`<div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3">${getTitle(adminTab,t)}</div>`:''}
+            </td>
+            <td>
+              <div class="sbts" style="margin-bottom:5px">
+                ${[3,2,1,0].map(sv=>`<button class="sbt asbt${v===sv?' sel-'+sv:''}" data-t="${t}" data-v="${sv}">${LBL[sv]}</button>`).join('')}
+              </div>
+              <div style="font-size:13px;font-weight:700;color:var(--accent2);padding:2px 2px 0">
+                70% 환산: ${v>0?(v/3*70).toFixed(1)+'점':'—'}
+              </div>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon">📊</div>팀별 결과 — ${adminTab}</div>
+    <table class="result-table">
+      <thead><tr>
+        <th style="width:36%">팀</th>
+        <th style="width:9%">합계</th>
+        <th style="width:9%">평균</th>
+        <th style="width:15%;white-space:normal">학생<br>(30%)</th>
+        <th style="width:15%;white-space:normal">교수<br>(70%)</th>
+        <th style="width:16%;white-space:normal">최종<br>(×15%)</th>
+      </tr></thead>
+      <tbody>
+        ${TEAMS.map(t=>{
+          const avg=n>0?(tot[t]/n).toFixed(2):'-';
+          const sp=spct(t);const ap=apct(t);const cm=comb(t);
+          return `<tr>
+            <td>
+              <strong>${t}팀</strong>
+              ${getTitle(adminTab,t)?`<div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3">${getTitle(adminTab,t)}</div>`:''}
+            </td>
+            <td>${tot[t]}</td><td>${avg}</td>
+            <td>${sp?sp+'점':'-'}</td>
+            <td>${ap?ap+'점':'-'}</td>
+            <td style="font-weight:700;color:var(--accent2)">${cm?cm+'점':'-'}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon">👥</div>제출 학생 목록 <span style="font-size:12px;color:var(--muted);margin-left:4px">${n}명</span></div>
+    ${n===0?'<div class="empty">아직 제출된 평가가 없습니다.</div>':`
+    <table>
+      <thead><tr>
+        <th style="width:6%">#</th>
+        <th style="width:26%">학과</th>
+        <th style="width:18%">학번</th>
+        <th style="width:14%">이름</th>
+        <th style="width:36%">제출시각</th>
+      </tr></thead>
+      <tbody>
+        ${d.students.map((s,i)=>`<tr>
+          <td>${i+1}</td><td>${s.dept}</td><td>${s.sid}</td><td>${s.name}</td>
+          <td style="color:var(--muted)">${s.ts}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`}
+  </div>`;
+
+  document.querySelectorAll('.asbt').forEach(btn=>{
+    btn.addEventListener('click',async()=>{
+      const t=+btn.dataset.t,v=+btn.dataset.v;
+      const cur=cachedData[adminTab]?.adminScores?.[t];
+      const curVal=(cur===undefined||cur===null)?-1:+cur;
+      const newVal=(curVal===v)?-1:v;
+      const res=await api('POST',{action:'saveAdminScore',password:ADMIN_API_PW,sec:adminTab,teamIdx:t,score:newVal});
+      if(res.ok){
+        if(!cachedData[adminTab].adminScores) cachedData[adminTab].adminScores={};
+        cachedData[adminTab].adminScores[t]=newVal;
+        renderAdminBody();
+      } else popup('저장 실패: '+(res.msg||'오류가 발생했습니다.'), '❌');
+    });
+  });
+}
+
+// ── EXCEL ────────────────────────────────────────────────────────
+function buildSheet(sec){
+  if(!cachedData)return[];
+  const d=cachedData[sec]||{students:[],adminScores:{}};
+  const n=d.students.length;const asc=d.adminScores||{};
+  const tot={};TEAMS.forEach(t=>tot[t]=0);
+  d.students.forEach(s=>TEAMS.forEach(t=>{tot[t]+=(+s.scores[t]||0);}));
+  const rows=[['팀','학생점수 합계','학생 평균','학생 30%','교수 점수','교수 70%','최종(×15%)']];
+  TEAMS.forEach(t=>{
+    const avg=n>0?+(tot[t]/n).toFixed(2):0;
+    const sp=n>0?+(avg/3*30).toFixed(1):0;
+    const av=+(asc[t]||0);
+    const ap=av?+(av/3*70).toFixed(1):0;
+    const cm=ap?+((sp+ap)*0.15).toFixed(2):0;  // 교수 점수만 있어도 계산
+    rows.push([`${t}팀`,tot[t],avg,sp,av?`${LBL[av]}(${av})`:'-',ap||'-',cm||'-']);
+  });
+  rows.push([]);rows.push(['제출 학생 목록']);
+  rows.push(['#','학과','학번','이름','제출시각']);
+  d.students.forEach((s,i)=>rows.push([i+1,s.dept,s.sid,s.name,s.ts]));
+  return rows;
+}
+
+function downloadSection(sec){
+  if(!cachedData){popup('새로고침을 먼저 눌러주세요.', '💡');return;}
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(buildSheet(sec));
+  ws['!cols']=[{wch:8},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws,`${sec}분반`);
+  XLSX.writeFile(wb,`상호평가_${sec}분반.xlsx`);
+}
+
+function downloadAll(){
+  if(!cachedData){toast('데이터를 먼저 불러오세요.');return;}
+  const wb=XLSX.utils.book_new();
+  RESULT_SECTIONS.forEach(sec=>{
+    const ws=XLSX.utils.aoa_to_sheet(buildSheet(sec));
+    ws['!cols']=[{wch:8},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:12}];
+    XLSX.utils.book_append_sheet(wb,ws,`${sec}분반`);
+  });
+  XLSX.writeFile(wb,'상호평가_전체.xlsx');
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+tryNav('s035');
+</script>
+</body>
+</html>
