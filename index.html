@@ -1076,15 +1076,17 @@ function renderAdminBody(){
     ${n===0?'<div class="empty">아직 제출된 평가가 없습니다.</div>':`
     <table>
       <thead><tr>
-        <th style="width:6%">#</th>
-        <th style="width:26%">학과</th>
-        <th style="width:18%">학번</th>
-        <th style="width:14%">이름</th>
-        <th style="width:36%">제출시각</th>
+        <th style="width:5%">#</th>
+        <th style="width:22%">학과</th>
+        <th style="width:15%">학번</th>
+        <th style="width:10%">이름</th>
+        <th style="width:8%">팀</th>
+        <th style="width:30%">제출시각</th>
       </tr></thead>
       <tbody>
         ${d.students.map((s,i)=>`<tr>
           <td>${i+1}</td><td>${s.dept}</td><td>${s.sid}</td><td>${s.name}</td>
+          <td style="font-weight:700;color:var(--accent)">${s.myTeam?s.myTeam+'팀':'-'}</td>
           <td style="color:var(--muted)">${s.ts}</td>
         </tr>`).join('')}
       </tbody>
