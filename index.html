@@ -98,7 +98,7 @@ nav .nav-test.active{background:linear-gradient(135deg,#50bcdf,#003087);color:#f
 }
 
 /* ── MAIN ── */
-main{max-width:960px;margin:0 auto;padding:0 20px 48px}
+main{max-width:860px;margin:0 auto;padding:0 20px 48px}
 
 /* ── CARD ── */
 .card{
@@ -1024,12 +1024,12 @@ function renderAdminBody(){
           const v=asc[t]!==undefined?+asc[t]:-1;
           return `<tr>
             <td>
-              <strong>${t}팀</strong>
-              ${getTitle(adminTab,t)?`<div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3">${getTitle(adminTab,t)}</div>`:''}
+              <strong style="font-size:15px">${t}팀</strong>
+              ${getTitle(adminTab,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(adminTab,t)}</div>`:''}
             </td>
             <td>
               <div class="sbts" style="margin-bottom:5px">
-                ${[5,4,3,2,1].map(sv=>`<button class="sbt asbt${v===sv?' sel-score':''}" data-t="${t}" data-v="${sv}">${LBL[sv]}</button>`).join('')}
+                ${[5,4,3,2,1,0].map(sv=>`<button class="sbt asbt${v===sv?' sel-score':''}" data-t="${t}" data-v="${sv}">${LBL[sv]}</button>`).join('')}
               </div>
               <div style="font-size:13px;font-weight:700;color:var(--accent2);padding:2px 2px 0">
                 70% 환산: ${v>=1?(v/5*70).toFixed(1)+'점':'—'}
@@ -1058,8 +1058,8 @@ function renderAdminBody(){
           const sp=spct(t);const ap=apct(t);const cm=comb(t);
           return `<tr>
             <td>
-              <strong>${t}팀</strong>
-              ${getTitle(adminTab,t)?`<div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3">${getTitle(adminTab,t)}</div>`:''}
+              <strong style="font-size:15px">${t}팀</strong>
+              ${getTitle(adminTab,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(adminTab,t)}</div>`:''}
             </td>
             <td>${tot[t]}</td><td>${avg}</td>
             <td>${sp?sp+'점':'-'}</td>
