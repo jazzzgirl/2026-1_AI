@@ -522,15 +522,8 @@ tr:hover td{background:var(--surface2)}
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPCp1BzMHQajZZ12026C_o7mWuw6Or9gS0DJRfc7wQEO0Mn4cHGVC0X-WdlbXvRVal/exec';
 
-const SECTION_PWS = {
-  '35': '0350609',
-  '54': '0540604',
-  '55': '0604055',
-  'test': 'test1234',
-  'admin': 'admin0921'
-};
-// Apps Script 관리자 API 비밀번호 (Code.gs의 ADMIN_PASSWORD와 동일하게 유지)
-const ADMIN_API_PW = 'admin0921';
+// 비밀번호는 모두 Apps Script 서버(Code.gs)에서 검증합니다.
+// index.html에는 비밀번호가 저장되지 않습니다.
 const ALL_SECTIONS = ['35','54','55','test'];
 const RESULT_SECTIONS = ['35','54','55'];
 const TEAMS = Array.from({length:13},(_,i)=>i+1);
@@ -728,9 +721,11 @@ function renderSectionLogin(el, sec, navKey){
   setTimeout(()=>document.getElementById('sec-pw')?.focus(),100);
 }
 
-function checkSectionPw(sec, navKey){
+async function checkSectionPw(sec, navKey){
   const pw=document.getElementById('sec-pw').value;
-  if(pw===SECTION_PWS[sec]){
+  if(!pw){ popup('비밀번호를 입력해주세요.', '🔒'); return; }
+  const res=await api('POST',{action:'sectionLogin',sec,password:pw});
+  if(res.ok){
     unlockedSections[sec]=true;
     currentSec=sec;
     if(sec==='test'){
@@ -925,9 +920,11 @@ function renderAdmin(el){
 
 async function adminLogin(){
   const pw=document.getElementById('adpw').value;
-  if(pw===SECTION_PWS['admin']){
+  if(!pw){ popup('비밀번호를 입력해주세요.', '🔒'); return; }
+  const res=await api('POST',{action:'adminLogin',password:pw});
+  if(res.ok){
     adminLogged=true;
-    localStorage.setItem('_apw',pw);
+    sessionStorage.setItem('_apw',pw);
     await fetchData();
     renderAdminPanel(document.getElementById('app'));
   } else {
@@ -1099,7 +1096,7 @@ function renderAdminBody(){
       const cur=cachedData[adminTab]?.adminScores?.[t];
       const curVal=(cur===undefined||cur===null)?-1:+cur;
       const newVal=(curVal===v)?0:v; // 0=미선택
-      const res=await api('POST',{action:'saveAdminScore',password:ADMIN_API_PW,sec:adminTab,teamIdx:t,score:newVal});
+      const res=await api('POST',{action:'saveAdminScore',password:sessionStorage.getItem('_apw')||'',sec:adminTab,teamIdx:t,score:newVal});
       if(res.ok){
         if(!cachedData[adminTab].adminScores) cachedData[adminTab].adminScores={};
         cachedData[adminTab].adminScores[t]=newVal;
