@@ -332,6 +332,22 @@ tr:hover td{background:var(--surface2)}
 }
 .popup-ok:hover{background:#002570;}
 
+.feedback-chip{
+  padding:5px 12px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  font-size:12px;font-weight:600;
+  color:var(--muted);cursor:pointer;
+  font-family:inherit;
+  transition:all .15s;
+}
+.feedback-chip:hover,.feedback-chip.used{
+  background:rgba(0,48,135,0.08);
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
 .empty{text-align:center;padding:36px 0;color:var(--muted);font-size:13px}
 
 /* ── TEST BANNER ── */
@@ -804,6 +820,42 @@ function buildStudentFormHTML(sec){
       <tbody id="score-tbody"></tbody>
     </table>
     <div class="qwarn" id="qwarn">⚠ 모든 팀에 점수를 선택해주세요.</div>
+
+    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+      <div class="card-title" style="margin-bottom:6px">
+        <div class="icon">💬</div>
+        프로젝트 소감 <span style="font-size:12px;font-weight:500;color:var(--muted);margin-left:4px">(선택)</span>
+      </div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">
+        다음 학기 수업 개선을 위해 자유롭게 의견을 남겨주세요.<br>
+        아래 항목을 참고해도 좋고, 하고 싶은 말을 자유롭게 적어도 됩니다.
+      </p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+        <button class="feedback-chip" onclick="insertChip(this)">📹 영상 발표 방식</button>
+        <button class="feedback-chip" onclick="insertChip(this)">⏱ 3분 영상 길이</button>
+        <button class="feedback-chip" onclick="insertChip(this)">👥 2~3인 팀 구성</button>
+        <button class="feedback-chip" onclick="insertChip(this)">🤖 AI 활용 과제</button>
+        <button class="feedback-chip" onclick="insertChip(this)">📊 상호평가 방식</button>
+        <button class="feedback-chip" onclick="insertChip(this)">💡 개선 아이디어</button>
+      </div>
+
+      <textarea id="f-feedback"
+        placeholder="예) 영상으로 발표하니 긴장감이 줄어서 좋았어요. 3분은 조금 짧은 것 같아요. 팀원이 2명이라 역할 분담이 명확해서 좋았습니다..."
+        style="width:100%;min-height:110px;padding:12px 14px;
+               background:var(--surface2);border:1px solid var(--border2);
+               border-radius:var(--r-sm);font-size:14px;color:var(--text);
+               outline:none;resize:vertical;font-family:inherit;line-height:1.7;
+               transition:border-color .15s;"
+        onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px var(--accent-glow)'"
+        onblur="this.style.borderColor='var(--border2)';this.style.boxShadow='none'"
+        oninput="updateFeedbackLen()"
+      ></textarea>
+      <div style="text-align:right;font-size:12px;color:var(--muted);margin-top:4px">
+        <span id="feedback-len">0</span> 자
+      </div>
+    </div>
+
     <button class="btn-primary" onclick="submitStudent('${sec}')">평가 제출하기 →</button>
   </div>`;
 }
@@ -878,6 +930,25 @@ function updateQuota(){
   document.getElementById('qwarn').classList.toggle('show', unsel>0);
 }
 
+function insertChip(btn){
+  const ta = document.getElementById('f-feedback');
+  if(!ta) return;
+  const label = btn.textContent.replace(/^[\p{Emoji}\s]+/u,'').trim();
+  const cur = ta.value;
+  // 이미 입력된 내용이 있으면 줄바꿈 후 추가
+  ta.value = cur ? cur + (cur.endsWith('\n')?'':'\n') + label + ': ' : label + ': ';
+  btn.classList.add('used');
+  ta.focus();
+  ta.setSelectionRange(ta.value.length, ta.value.length);
+  updateFeedbackLen();
+}
+
+function updateFeedbackLen(){
+  const el = document.getElementById('feedback-len');
+  const ta = document.getElementById('f-feedback');
+  if(el && ta) el.textContent = ta.value.length;
+}
+
 async function submitStudent(sec){
   const dept=document.getElementById('f-dept').value.trim();
   const sid=document.getElementById('f-sid').value.trim();
@@ -895,7 +966,11 @@ async function submitStudent(sec){
   // 본인팀(skip) 제외하고 숫자 점수만 전송
   const scoresClean = {};
   Object.entries(selectedScores).forEach(([k,v])=>{ if(v!=='skip') scoresClean[k]=v; });
-  const res=await api('POST',{action:'submit',sec,dept,sid,name,scores:scoresClean,myTeam});
+
+  // 소감 (선택)
+  const feedback = document.getElementById('f-feedback')?.value.trim() || '';
+
+  const res=await api('POST',{action:'submit',sec,dept,sid,name,scores:scoresClean,myTeam,feedback});
   if(res.ok){
     renderSubmitDone(document.getElementById('app'), sec);
   } else {
@@ -1103,6 +1178,24 @@ function renderAdminBody(){
         </tr>`).join('')}
       </tbody>
     </table>`}
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon">💬</div>학생 소감 모음 <span style="font-size:12px;color:var(--muted);margin-left:4px">${d.students.filter(s=>s.feedback).length}건</span></div>
+    ${d.students.filter(s=>s.feedback).length===0
+      ? '<div class="empty">아직 작성된 소감이 없습니다.</div>'
+      : `<div style="display:flex;flex-direction:column;gap:10px">
+          ${d.students.filter(s=>s.feedback).map((s,i)=>`
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap">
+              <span style="font-size:12px;font-weight:700;color:var(--accent)">${s.name}</span>
+              <span style="font-size:11px;color:var(--muted)">${s.dept} · ${s.myTeam?s.myTeam+'번째 발표':''}</span>
+              <span style="font-size:11px;color:var(--gray);margin-left:auto">${s.ts}</span>
+            </div>
+            <p style="font-size:13px;color:var(--text);line-height:1.75;white-space:pre-wrap;word-break:break-all">${s.feedback}</p>
+          </div>`).join('')}
+        </div>`
+    }
   </div>`;
 
   document.querySelectorAll('.asbt').forEach(btn=>{
@@ -1144,12 +1237,27 @@ function buildSheet(sec){
   return rows;
 }
 
+function buildFeedbackSheet(sec){
+  if(!cachedData)return[];
+  const d=cachedData[sec]||{students:[]};
+  const rows=[['#','학과','학번','이름','발표순서','제출시각','소감']];
+  let idx=1;
+  d.students.forEach(s=>{
+    if(s.feedback) rows.push([idx++,s.dept,s.sid,s.name,s.myTeam?`${s.myTeam}번째`:'-',s.ts,s.feedback]);
+  });
+  if(rows.length===1) rows.push(['','','','','','','(작성된 소감 없음)']);
+  return rows;
+}
+
 function downloadSection(sec){
   if(!cachedData){popup('새로고침을 먼저 눌러주세요.', '💡');return;}
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet(buildSheet(sec));
   ws['!cols']=[{wch:10},{wch:16},{wch:20},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:12}];
   XLSX.utils.book_append_sheet(wb,ws,`${sec}분반`);
+  const wf=XLSX.utils.aoa_to_sheet(buildFeedbackSheet(sec));
+  wf['!cols']=[{wch:4},{wch:16},{wch:13},{wch:8},{wch:10},{wch:18},{wch:60}];
+  XLSX.utils.book_append_sheet(wb,wf,`${sec}분반_소감`);
   XLSX.writeFile(wb,`상호평가_${sec}분반.xlsx`);
 }
 
@@ -1160,6 +1268,9 @@ function downloadAll(){
     const ws=XLSX.utils.aoa_to_sheet(buildSheet(sec));
     ws['!cols']=[{wch:10},{wch:16},{wch:20},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:12}];
     XLSX.utils.book_append_sheet(wb,ws,`${sec}분반`);
+    const wf=XLSX.utils.aoa_to_sheet(buildFeedbackSheet(sec));
+    wf['!cols']=[{wch:4},{wch:16},{wch:13},{wch:8},{wch:10},{wch:18},{wch:60}];
+    XLSX.utils.book_append_sheet(wb,wf,`${sec}분반_소감`);
   });
   XLSX.writeFile(wb,'상호평가_전체.xlsx');
 }
