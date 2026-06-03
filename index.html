@@ -875,7 +875,7 @@ function buildScoreRows(sec){
       const myInfo=getTeamInfo(sec,t);
       tr.innerHTML=`
         <td>
-          <strong style="font-size:16px">${t}번째 발표</strong>
+          <strong style="font-size:16px">${t}번</strong>
           <span style="font-size:11px;background:var(--surface2);color:var(--muted);border-radius:4px;padding:1px 7px;margin-left:6px">내 팀</span>
           ${myInfo.teamName?`<div style="font-size:13px;font-weight:700;color:var(--accent);margin-top:4px">${myInfo.teamName}</div>`:''}
           ${myInfo.members?`<div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4">${myInfo.members}</div>`:''}
@@ -889,7 +889,7 @@ function buildScoreRows(sec){
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td>
-        <strong style="font-size:16px">${t}번째 발표</strong>
+        <strong style="font-size:16px">${t}번</strong>
         ${info.teamName?`<div style="font-size:13px;font-weight:700;color:var(--accent);margin-top:4px">${info.teamName}</div>`:''}
         ${info.members?`<div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4">${info.members}</div>`:''}
       </td>
@@ -1189,7 +1189,7 @@ function renderAdminBody(){
           <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap">
               <span style="font-size:12px;font-weight:700;color:var(--accent)">${s.name}</span>
-              <span style="font-size:11px;color:var(--muted)">${s.dept} · ${s.myTeam?s.myTeam+'번째 발표':''}</span>
+              <span style="font-size:11px;color:var(--muted)">${s.dept} · ${s.myTeam?s.myTeam+'번':''}</span>
               <span style="font-size:11px;color:var(--gray);margin-left:auto">${s.ts}</span>
             </div>
             <p style="font-size:13px;color:var(--text);line-height:1.75;white-space:pre-wrap;word-break:break-all">${s.feedback}</p>
