@@ -529,69 +529,76 @@ const RESULT_SECTIONS = ['35','54','55'];
 const TEAMS = Array.from({length:13},(_,i)=>i+1);
 
 // ════════════════════════════════════════════════════════
-// ★ 분반별 팀 프로젝트 제목 — 따옴표 안의 내용만 수정하세요 ★
-// 제목이 없으면 빈 문자열('')로 두세요.
+// ★ 분반별 팀 정보 — 팀명 / 팀원 이름 수정 ★
+// 각 항목: { teamName: '1팀', members: '홍길동, 김철수' }
 // ════════════════════════════════════════════════════════
-
-const TEAM_TITLES = {
+const TEAM_INFO = {
   '35': [
-    '1팀 제목을 입력하세요',   // 1팀
-    '2팀 제목을 입력하세요',   // 2팀
-    '3팀 제목을 입력하세요',   // 3팀
-    '4팀 제목을 입력하세요',   // 4팀
-    '5팀 제목을 입력하세요',   // 5팀
-    '6팀 제목을 입력하세요',   // 6팀
-    '7팀 제목을 입력하세요',   // 7팀
-    '8팀 제목을 입력하세요',   // 8팀
-    '9팀 제목을 입력하세요',   // 9팀
-    '10팀 제목을 입력하세요',  // 10팀
-    '11팀 제목을 입력하세요',  // 11팀
-    '12팀 제목을 입력하세요',  // 12팀
-    '13팀 제목을 입력하세요',  // 13팀
+    { teamName: '1팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '2팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '3팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '4팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '5팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '6팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '7팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '8팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '9팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '10팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '11팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '12팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '13팀', members: '팀원 이름을 입력하세요' },
   ],
   '54': [
-    '1팀 제목을 입력하세요',   // 1팀
-    '2팀 제목을 입력하세요',   // 2팀
-    '3팀 제목을 입력하세요',   // 3팀
-    '4팀 제목을 입력하세요',   // 4팀
-    '5팀 제목을 입력하세요',   // 5팀
-    '6팀 제목을 입력하세요',   // 6팀
-    '7팀 제목을 입력하세요',   // 7팀
-    '8팀 제목을 입력하세요',   // 8팀
-    '9팀 제목을 입력하세요',   // 9팀
-    '10팀 제목을 입력하세요',  // 10팀
-    '11팀 제목을 입력하세요',  // 11팀
-    '12팀 제목을 입력하세요',  // 12팀
-    '1팀 MagiCalendar (magicalendar.cloud)',  // 13팀
+    { teamName: '1팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '2팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '3팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '4팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '5팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '6팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '7팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '8팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '9팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '10팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '11팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '12팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '13팀', members: '팀원 이름을 입력하세요' },
   ],
   '55': [
-    '1팀 제목을 입력하세요',   // 1팀
-    '2팀 제목을 입력하세요',   // 2팀
-    '3팀 제목을 입력하세요',   // 3팀
-    '4팀 제목을 입력하세요',   // 4팀
-    '5팀 제목을 입력하세요',   // 5팀
-    '6팀 제목을 입력하세요',   // 6팀
-    '7팀 제목을 입력하세요',   // 7팀
-    '8팀 제목을 입력하세요',   // 8팀
-    '9팀 제목을 입력하세요',   // 9팀
-    '10팀 제목을 입력하세요',  // 10팀
-    '11팀 제목을 입력하세요',  // 11팀
-    '12팀 제목을 입력하세요',  // 12팀
-    '13팀 제목을 입력하세요',  // 13팀
+    { teamName: '1팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '2팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '3팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '4팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '5팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '6팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '7팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '8팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '9팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '10팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '11팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '12팀', members: '팀원 이름을 입력하세요' },
+    { teamName: '13팀', members: '팀원 이름을 입력하세요' },
   ],
   'test': [
-    'TEST - 1팀 제목', 'TEST - 2팀 제목', 'TEST - 3팀 제목',
-    'TEST - 4팀 제목', 'TEST - 5팀 제목', 'TEST - 6팀 제목',
-    'TEST - 7팀 제목', 'TEST - 8팀 제목', 'TEST - 9팀 제목',
-    'TEST - 10팀 제목','TEST - 11팀 제목','TEST - 12팀 제목',
-    'TEST - 13팀 제목',
+    { teamName: '1팀', members: '홍길동, 김철수' },
+    { teamName: '2팀', members: '이영희, 박민수' },
+    { teamName: '3팀', members: '최지수, 정수민' },
+    { teamName: '4팀', members: '강민준, 윤서연' },
+    { teamName: '5팀', members: '임채원, 한지원' },
+    { teamName: '6팀', members: '오준혁, 신예진' },
+    { teamName: '7팀', members: '배수현, 조민기' },
+    { teamName: '8팀', members: '서진우, 권나연' },
+    { teamName: '9팀', members: '유하은, 장태민' },
+    { teamName: '10팀', members: '안도현, 고은서' },
+    { teamName: '11팀', members: '남지훈, 손아름' },
+    { teamName: '12팀', members: '문기범, 양채린' },
+    { teamName: '13팀', members: '전민서, 류성현' },
   ],
 };
 
-// 현재 분반의 팀 제목 배열을 가져오는 헬퍼
-function getTitle(sec, teamIdx){
-  const titles = TEAM_TITLES[sec] || TEAM_TITLES['test'];
-  return titles ? (titles[teamIdx-1] || '') : '';
+// 팀 정보 헬퍼
+function getTeamInfo(sec, teamIdx){
+  const info = TEAM_INFO[sec] || TEAM_INFO['test'];
+  return info ? (info[teamIdx-1] || { teamName:'', members:'' }) : { teamName:'', members:'' };
 }
 const LBL = {5:'5점',4:'4점',3:'3점',2:'2점',1:'1점',0:'미제출'};
 
@@ -768,15 +775,15 @@ function buildStudentFormHTML(sec){
     </div>
     <div class="form-row" style="grid-template-columns:1fr 2fr;margin-bottom:16px">
       <div class="fg">
-        <label>본인 팀 번호</label>
+        <label>본인 발표 순서</label>
         <select id="f-team" style="width:100%;padding:10px 13px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:15px;color:var(--text);outline:none;font-family:inherit">
           <option value="0">-- 선택 --</option>
-          ${Array.from({length:13},(_,i)=>`<option value="${i+1}">${i+1}팀</option>`).join('')}
+          ${Array.from({length:13},(_,i)=>`<option value="${i+1}">${i+1}번째</option>`).join('')}
         </select>
       </div>
       <div class="fg" style="display:flex;align-items:flex-end">
         <p style="font-size:12px;color:var(--muted);line-height:1.6;padding-bottom:2px">
-          본인 팀을 선택하면 해당 팀은 평가에서 제외됩니다.<br>나머지 12팀에 1~5점을 자유롭게 부여해주세요.
+          본인 팀의 발표 순서를 선택하면 해당 팀은 평가에서 제외됩니다.<br>나머지 12팀에 1~5점을 자유롭게 부여해주세요.
         </p>
       </div>
     </div>
@@ -793,7 +800,7 @@ function buildStudentFormHTML(sec){
     </div>
     <p class="hint">1점(낮음) ~ 5점(높음) · 미제출(0점) · 본인 팀 제외 12팀 모두 선택 필수</p>
     <table>
-      <thead><tr><th style="width:42%">팀</th><th style="width:58%">점수 선택</th></tr></thead>
+      <thead><tr><th style="width:42%">발표 순서</th><th style="width:58%">점수 선택</th></tr></thead>
       <tbody id="score-tbody"></tbody>
     </table>
     <div class="qwarn" id="qwarn">⚠ 모든 팀에 점수를 선택해주세요.</div>
@@ -813,22 +820,26 @@ function buildScoreRows(sec){
       selectedScores[t]='skip';
       const tr=document.createElement('tr');
       tr.style.opacity='0.38';
+      const myInfo=getTeamInfo(sec,t);
       tr.innerHTML=`
         <td>
-          <strong style="font-size:16px">${t}팀</strong>
+          <strong style="font-size:16px">${t}번째 발표</strong>
           <span style="font-size:11px;background:var(--surface2);color:var(--muted);border-radius:4px;padding:1px 7px;margin-left:6px">내 팀</span>
-          ${getTitle(sec,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(sec,t)}</div>`:''}
+          ${myInfo.teamName?`<div style="font-size:13px;font-weight:700;color:var(--accent);margin-top:4px">${myInfo.teamName}</div>`:''}
+          ${myInfo.members?`<div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4">${myInfo.members}</div>`:''}
         </td>
         <td><span style="font-size:13px;color:var(--muted)">평가 제외</span></td>`;
       tb.appendChild(tr);
       return;
     }
     selectedScores[t]=-1;
+    const info=getTeamInfo(sec,t);
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td>
-        <strong style="font-size:16px">${t}번</strong>
-        ${getTitle(sec,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(sec,t)}</div>`:''}
+        <strong style="font-size:16px">${t}번째 발표</strong>
+        ${info.teamName?`<div style="font-size:13px;font-weight:700;color:var(--accent);margin-top:4px">${info.teamName}</div>`:''}
+        ${info.members?`<div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4">${info.members}</div>`:''}
       </td>
       <td><div class="sbts">
         ${[5,4,3,2,1,0].map(v=>`<button class="sbt" data-team="${t}" data-val="${v}">${LBL[v]}</button>`).join('')}
@@ -875,7 +886,7 @@ async function submitStudent(sec){
 
   // 본인 팀 확인
   const myTeam = +(document.getElementById('f-team')?.value||0);
-  if(myTeam===0){popup('본인 팀 번호를 선택해주세요.','⚠️');return;}
+  if(myTeam===0){popup('본인 팀의 발표 순서를 선택해주세요.','⚠️');return;}
 
   // 본인팀 제외 나머지 팀 미선택 확인
   const unselected=Object.values(selectedScores).filter(v=>v===-1).length;
@@ -1013,16 +1024,18 @@ function renderAdminBody(){
     <p class="hint">1점(낮음) ~ 5점(높음) 선택 → 70% 자동 환산</p>
     <table>
       <thead><tr>
-        <th style="width:52%">팀</th>
+        <th style="width:52%">발표 순서</th>
         <th style="width:48%">점수 선택 / 70% 환산</th>
       </tr></thead>
       <tbody>
         ${TEAMS.map(t=>{
           const v=asc[t]!==undefined?+asc[t]:-1;
+          const ai=getTeamInfo(adminTab,t);
           return `<tr>
             <td>
-              <strong style="font-size:15px">${t}팀</strong>
-              ${getTitle(adminTab,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(adminTab,t)}</div>`:''}
+              <strong style="font-size:15px">${t}번째 발표</strong>
+              ${ai.teamName?`<div style="font-size:13px;font-weight:700;color:var(--accent);margin-top:3px">${ai.teamName}</div>`:''}
+              ${ai.members?`<div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4">${ai.members}</div>`:''}
             </td>
             <td>
               <div class="sbts" style="margin-bottom:5px">
@@ -1039,10 +1052,10 @@ function renderAdminBody(){
   </div>
 
   <div class="card">
-    <div class="card-title"><div class="icon">📊</div>팀별 결과 — ${adminTab}</div>
+    <div class="card-title"><div class="icon">📊</div>발표 순서별 결과 — ${adminTab}</div>
     <table class="result-table">
       <thead><tr>
-        <th style="width:36%">팀</th>
+        <th style="width:36%">발표 순서</th>
         <th style="width:9%">합계</th>
         <th style="width:9%">평균</th>
         <th style="width:15%;white-space:normal">학생<br>(30%)</th>
@@ -1053,10 +1066,12 @@ function renderAdminBody(){
         ${TEAMS.map(t=>{
           const avg=n>0?(tot[t]/n).toFixed(2):'-';
           const sp=spct(t);const ap=apct(t);const cm=comb(t);
+          const ri=getTeamInfo(adminTab,t);
           return `<tr>
             <td>
-              <strong style="font-size:15px">${t}팀</strong>
-              ${getTitle(adminTab,t)?`<div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4">${getTitle(adminTab,t)}</div>`:''}
+              <strong style="font-size:15px">${t}번째 발표</strong>
+              ${ri.teamName?`<div style="font-size:13px;font-weight:700;color:var(--accent);margin-top:3px">${ri.teamName}</div>`:''}
+              ${ri.members?`<div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4">${ri.members}</div>`:''}
             </td>
             <td>${tot[t]}</td><td>${avg}</td>
             <td>${sp?sp+'점':'-'}</td>
@@ -1077,13 +1092,13 @@ function renderAdminBody(){
         <th style="width:22%">학과</th>
         <th style="width:15%">학번</th>
         <th style="width:10%">이름</th>
-        <th style="width:8%">팀</th>
+        <th style="width:8%">발표순서</th>
         <th style="width:30%">제출시각</th>
       </tr></thead>
       <tbody>
         ${d.students.map((s,i)=>`<tr>
           <td>${i+1}</td><td>${s.dept}</td><td>${s.sid}</td><td>${s.name}</td>
-          <td style="font-weight:700;color:var(--accent)">${s.myTeam?s.myTeam+'팀':'-'}</td>
+          <td style="font-weight:700;color:var(--accent)">${s.myTeam?s.myTeam+'번째':'-'}</td>
           <td style="color:var(--muted)">${s.ts}</td>
         </tr>`).join('')}
       </tbody>
@@ -1113,18 +1128,19 @@ function buildSheet(sec){
   const n=d.students.length;const asc=d.adminScores||{};
   const tot={};TEAMS.forEach(t=>tot[t]=0);
   d.students.forEach(s=>TEAMS.forEach(t=>{tot[t]+=(+s.scores[t]||0);}));
-  const rows=[['팀','학생점수 합계','학생 평균','학생 30%','교수 점수','교수 70%','최종(×15%)']];
+  const rows=[['발표순서','팀명','팀원','학생점수 합계','학생 평균','학생 30%','교수 점수','교수 70%','최종(×15%)']];
   TEAMS.forEach(t=>{
+    const info=getTeamInfo(sec,t);
     const avg=n>0?+(tot[t]/n).toFixed(2):0;
-    const sp=n>0?+(avg/5*30).toFixed(1):0; // 5점 척도
+    const sp=n>0?+(avg/5*30).toFixed(1):0;
     const av=+(asc[t]||0);
     const ap=av?+(av/5*70).toFixed(1):0;
-    const cm=ap?+((sp+ap)*0.15).toFixed(2):0;  // 교수 점수만 있어도 계산
-    rows.push([`${t}팀`,tot[t],avg,sp,av?`${LBL[av]}(${av})`:'-',ap||'-',cm||'-']);
+    const cm=ap?+((sp+ap)*0.15).toFixed(2):0;
+    rows.push([`${t}번째`,info.teamName||'-',info.members||'-',tot[t],avg,sp,av?`${LBL[av]}(${av})`:'-',ap||'-',cm||'-']);
   });
   rows.push([]);rows.push(['제출 학생 목록']);
-  rows.push(['#','학과','학번','이름','제출시각']);
-  d.students.forEach((s,i)=>rows.push([i+1,s.dept,s.sid,s.name,s.ts]));
+  rows.push(['#','학과','학번','이름','발표순서','제출시각']);
+  d.students.forEach((s,i)=>rows.push([i+1,s.dept,s.sid,s.name,s.myTeam?`${s.myTeam}번째`:'-',s.ts]));
   return rows;
 }
 
@@ -1132,7 +1148,7 @@ function downloadSection(sec){
   if(!cachedData){popup('새로고침을 먼저 눌러주세요.', '💡');return;}
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet(buildSheet(sec));
-  ws['!cols']=[{wch:8},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:12}];
+  ws['!cols']=[{wch:10},{wch:16},{wch:20},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:12}];
   XLSX.utils.book_append_sheet(wb,ws,`${sec}분반`);
   XLSX.writeFile(wb,`상호평가_${sec}분반.xlsx`);
 }
@@ -1142,7 +1158,7 @@ function downloadAll(){
   const wb=XLSX.utils.book_new();
   RESULT_SECTIONS.forEach(sec=>{
     const ws=XLSX.utils.aoa_to_sheet(buildSheet(sec));
-    ws['!cols']=[{wch:8},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:12}];
+    ws['!cols']=[{wch:10},{wch:16},{wch:20},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:12}];
     XLSX.utils.book_append_sheet(wb,ws,`${sec}분반`);
   });
   XLSX.writeFile(wb,'상호평가_전체.xlsx');
